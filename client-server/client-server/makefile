@@ -8,11 +8,6 @@ server:	server.cpp
 client:	clientManager.cpp
 	g++ $(CXXFLAGS) clientManager.cpp -o client
 
-runserver:	server
-	./server
-runclient:	client
-	./client 127.0.0.1
-
 all:	server client
 
 clean:

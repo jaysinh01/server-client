@@ -12,10 +12,22 @@
 #include <errno.h>
 #include <arpa/inet.h>
 #include <iostream>
+#include <sys/time.h>
+#include <iomanip>
 
+extern int portnummber;
 
+void printTime(){
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    long double secondsEpoch =
+        (long double)(tv.tv_sec) +
+        (long double)(tv.tv_usec) / 10000;
+    //time_t epoch = time(NULL);
+    std::cout << std::setprecision(2) << std::fixed << secondsEpoch << ": ";
+}
 
-int clientFun(char work[], char *ip[])
+int clientFun(char work[], char *ip[], char filename[])
 {
     
     int sockfd = 0, n = 0;
@@ -27,6 +39,7 @@ int clientFun(char work[], char *ip[])
     memset(recvBuff, '0',sizeof(recvBuff));
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
+        
         printf("\n Error : Could not create socket \n");
         return 1;
     } 
@@ -34,9 +47,10 @@ int clientFun(char work[], char *ip[])
     memset(&serv_addr, '0', sizeof(serv_addr)); 
 
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(12000);
+    unsigned short vOut = (unsigned short)strtol(ip[1],NULL,10);
+    serv_addr.sin_port = htons(vOut);
 
-    if(inet_pton(AF_INET, ip[1], &serv_addr.sin_addr)<=0)
+    if(inet_pton(AF_INET, ip[2], &serv_addr.sin_addr)<=0)
     {
         printf("\n inet_pton error occured\n");
         return 1;
@@ -48,29 +62,35 @@ int clientFun(char work[], char *ip[])
        return 1;
     }
     
-    int pid = getppid();
+    //int pid = getppid();
     memset(sendBuff, '0', sizeof(sendBuff));
    
-    sprintf(sendBuff, "%d.%s", pid, work);
-    
+    sprintf(sendBuff, "%s-%s", filename, work);
+    printTime();
+    std::cout << "Send " << "(T" <<  std::setfill (' ') << std::setw (3) << work << ")" << std::endl;
         
         //sockfd = socket(AF_INET, SOCK_STREAM, 0);
         //connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
-        send(sockfd, sendBuff, sizeof(sendBuff), 0);
+    send(sockfd, sendBuff, sizeof(sendBuff), 0);
+    
 //        printf("58");
         while ( (n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
         {
             recvBuff[n] = 0;
-            if(fputs(recvBuff, stdout) == EOF)
-            {
-                printf("\n Error : Fputs error\n");
+            if (recvBuff[0] == 'D'){
+                printTime();
+                std::cout << "Recv " << "(" << std::setfill (' ') << std::setw (3) <<recvBuff << ")" << std::endl;
             }
+//            if(fputs(recvBuff, stdout) == EOF)
+//            {
+//                printf("\n Error : Fputs error\n");
+//            }
         }
 
-        if(n < 0)
-        {
-            printf("\n Read error \n");
-        }
+//        if(n < 0)
+//        {
+//            printf("\n Read error \n");
+//        }
         //close(sockfd);
     
 

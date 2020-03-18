@@ -13,6 +13,40 @@
 #include <time.h>
 #include <iostream>
 #include <sys/poll.h>
+#include <iomanip>
+#include <sys/time.h>
+
+int id = 0;
+
+void printTime(){
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    long double secondsEpoch =
+        (long double)(tv.tv_sec) +
+        (long double)(tv.tv_usec) / 10000;
+    //time_t epoch = time(NULL);
+    std::cout << std::setprecision(2) << std::fixed << secondsEpoch << ": ";
+}
+
+void printHeader(int portnumber){
+    std::cout << "Using port: " << portnumber << std::endl;
+}
+
+void doWork(char recvBuff[], char sendBuff[]){
+    char *client_name, *pch;
+    sprintf(recvBuff, "%s-%d", recvBuff, 20);
+    //int message_size = (int) strlen(recvBuff);
+    client_name = strtok(recvBuff,"-");
+    pch = strtok(NULL, "-");
+    int work = atoi(pch);
+    printTime();
+    std::cout << "# " << ++id << " " << "(T " << work << ") ";
+    std::cout << "from " << client_name << std::endl;
+    //trans call
+    printTime();
+    std::cout << "# " << id << " " << "(DONE) ";
+    std::cout << "from " << client_name << std::endl;
+}
 
 int main(int argc, char *argv[])
 {
@@ -22,19 +56,20 @@ int main(int argc, char *argv[])
     int    nfds = 1;
     int    timeout;
     int rc;
-    //int n = 0;
+    
 
-    char sendBuff[1025];
+    char sendBuff[256];
     char recvBuff[256];
-    time_t ticks; 
+    
 
     listenfd = socket(AF_INET, SOCK_STREAM, 0);
     memset(&serv_addr, '0', sizeof(serv_addr));
     memset(sendBuff, '0', sizeof(sendBuff));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port = htons(12000);
-
+    unsigned short vOut = (unsigned short)strtol(argv[1],NULL,10);
+    serv_addr.sin_port = htons(vOut);
+    printHeader(vOut);
     bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)); 
 
     listen(listenfd, 10);
@@ -44,12 +79,12 @@ int main(int argc, char *argv[])
     fds[0].events = POLLIN;
     
     timeout = (60 * 1000);
-    printf("37");
+    //printf("37");
     
     
     while(1)
     {
-        printf("Waiting on poll()...\n");
+        //printf("Waiting on poll()...\n");
         rc = poll(fds, nfds, timeout);
         if (rc < 0){
             perror("  poll() failed");
@@ -59,11 +94,13 @@ int main(int argc, char *argv[])
             break;
         }
             connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
-            printf("42");
+//            printf("42");
             read(connfd, recvBuff, sizeof(recvBuff)-1);
-            std::cout << recvBuff << std::endl;
-            ticks = time(NULL);
-            snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
+            doWork(recvBuff, sendBuff);
+            //std::cout << recvBuff << std::endl;
+           // ticks = time(NULL);
+            sprintf(sendBuff, "%s %d","D", id);
+            //snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
             write(connfd, sendBuff, strlen(sendBuff));
 
             close(connfd);
