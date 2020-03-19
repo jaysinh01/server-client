@@ -1,0 +1,34 @@
+.TH client 1 "March 19, 2020" "version 1.0"
+.SH NAME
+client - Clients send transactions (T<n>) provided by the user to the server to execute. Clients may have lulls entered between transactions, so they wait (S<n>) for a transaction to happen.
+.SH SYNOPSIS
+.B ./client portnumber ip-address
+(portnumber range: 5,000 to 64,000)
+
+.B
+.SH DESCRIPTION
+
+A client process receives input (either from the keyboard or redirected from a file) containing two commands:
+T<n> Transaction. The parameter is an integer > 0. This command will be sent to the server for processing. The client sits idle waiting for the server to complete the transaction.
+S<n> Sleep. This command simulates having the client wait between receiving new transactions to process. The client waits for a time determined by integer parameter n, with n between 0 and 100. You will have a routine that gets called for each sleep request: void Sleep(int n).
+
+When the client reaches the end of input, then it will exit. The output will be stored in a file names as
+.I machinename.pid
+
+.B
+.SH OPTIONS
+
+.I None
+.SH BUGS
+
+The program is not built against wrong input as the assignment decription gurenteed a correct input at all time. Any wrong message from client will crash the program.
+
+Please report any unwanted behaviour to me (jaysinh@ualberta.ca). The program was tested on lab machine and follows everyting stated in the assignment.
+
+.B
+.SH SEE ALSO
+
+Thannk you for going thorugh the man page and grading the program.
+
+
+

@@ -1,0 +1,34 @@
+.TH server 1 "March 19, 2020" "version 1.0"
+.SH NAME
+server - The server receives the transactions, processes them, and then waits for the next transaction from client
+from the port specified
+.SH SYNOPSIS
+.B ./server portnumber
+(range: 5,000 to 64,000)
+
+.B
+.SH DESCRIPTION
+
+The server process reads its input from the port number specified on its command line invocation. Specifically, these messages from clients are transaction requests:
+T<n> Execute a transaction with integer parameter n, with n > 0. You will have a routine that gets called for each transaction: void Trans(int n). The parameter n is used by Trans to determine how long to simulate the execution of the transaction.
+
+The server maintains a transaction # that starts at 0 and is incremented with each transaction performed by the server. When a transaction is complete, the server sends back to the client the message D<n>, that the transaction is “D”one, and that its transaction number is n.
+
+The server will exit when it has not recieved any data for 1 minute. The output of the server will be saved under server.log file.
+
+.B
+.SH OPTIONS
+
+.I None
+.SH BUGS
+
+The program is not built against wrong input as the assignment decription gurenteed a correct input at all time. Any wrong message from client will crash the program.
+
+Please report any unwanted behaviour to me (jaysinh@ualberta.ca). The program was tested on lab machine and follows everyting stated in the assignment.
+
+.B
+.SH SEE ALSO
+
+Thannk you for going thorugh the man page and grading the program.
+
+

@@ -20,6 +20,10 @@ int clientFun(char work[], char *ip[], char filename[]);
 
 //CLIENTMANAGER
 
+//prints end summary in the output file
+void printFooter(int transactions);
+
+
 //prints header in the output file
 void printHeader(char *ip_address, char filename[]);
 
