@@ -46,6 +46,7 @@ void getLine(char *argv[], char filename[]){
             //printTime();
             int sleep_count = stoi(str2);
             std::cout << "Sleep " << sleep_count << " units" << std::endl;
+            Sleep(sleep_count);
         }else{
             //printTime();
             //std::cout << input << std::endl;
@@ -97,7 +98,10 @@ int main(int argc, char *argv[]){
             std::string str2 = input.substr(1,input.length());
             printTime();
             int sleep_count = stoi(str2);
-            std::cout << "Sleep " << sleep_count << " units" << std::endl;
+            std::string dummy = " units";
+            std::cout << "Sleep ";
+            std::cout << sleep_count;
+            std::cout << dummy << '\n';
         }else{
             //printTime();
             //std::cout << input << std::endl;

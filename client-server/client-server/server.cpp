@@ -15,8 +15,19 @@
 #include <sys/poll.h>
 #include <iomanip>
 #include <sys/time.h>
+#include "TandS.cpp"
+#include <vector>
 
 int id = 0;
+
+std::vector<std::pair<std::string, int>> client_count;
+
+
+void printFooter(){
+    for (auto i : client_count){
+        std::cout << i.second << " transactions from " << i.first << std::endl;
+    }
+}
 
 void printTime(){
     struct timeval tv;
@@ -26,6 +37,27 @@ void printTime(){
         (long double)(tv.tv_usec) / 10000;
     //time_t epoch = time(NULL);
     std::cout << std::setprecision(2) << std::fixed << secondsEpoch << ": ";
+}
+
+void add_transaction(char *client_name){
+    std::string client_name_string(client_name);
+    bool foundIt = false;
+    for (int i = 0; i < (int) client_count.size(); i++){
+        if(client_count[i].first.compare(client_name_string) == 0){
+            int count = client_count[i].second;
+            count++;
+            client_count[i].second = count;
+            foundIt = true;
+            break;
+        }
+    }
+    if (!foundIt){
+        std::pair<std::string, int> toPut;
+        toPut.first = client_name_string;
+        toPut.second = 1;
+        client_count.push_back(toPut);
+    }
+    
 }
 
 void printHeader(int portnumber){
@@ -39,10 +71,11 @@ void doWork(char recvBuff[], char sendBuff[]){
     client_name = strtok(recvBuff,"-");
     pch = strtok(NULL, "-");
     int work = atoi(pch);
+    add_transaction(client_name);
     printTime();
-    std::cout << "# " << ++id << " " << "(T " << work << ") ";
+    std::cout << "# " << ++id << " " << "(T" << std::setfill (' ') << std::setw (3) << work << ") ";
     std::cout << "from " << client_name << std::endl;
-    //trans call
+    Trans(work);
     printTime();
     std::cout << "# " << id << " " << "(DONE) ";
     std::cout << "from " << client_name << std::endl;
@@ -78,7 +111,7 @@ int main(int argc, char *argv[])
     fds[0].fd = listenfd;
     fds[0].events = POLLIN;
     
-    timeout = (60 * 1000);
+    timeout = (30 * 1000);
     //printf("37");
     
     
@@ -90,7 +123,7 @@ int main(int argc, char *argv[])
             perror("  poll() failed");
             break;
         }if (rc == 0){
-            printf("  poll() timed out.  End program.\n");
+            //printf("  poll() timed out.  End program.\n");
             break;
         }
             connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
@@ -107,5 +140,6 @@ int main(int argc, char *argv[])
     //        break;
             sleep(1);
      }
+    printFooter();
     close(listenfd);
 }
