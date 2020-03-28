@@ -28,9 +28,9 @@ void printHeader(char *ip_address, char filename[]){
 
 void getLine(char *argv[], char filename[]){
     std::string input;
-    //bool cFlag = true;
+    
     while(true){
-        //memset(input, '0', sizeof(input));
+        //keep getting input and break when reached the end
         if (std::cin.eof()){
             break;
         }
@@ -43,6 +43,7 @@ void getLine(char *argv[], char filename[]){
         
         
         if (input[0] == 'S'){
+            //prints the time it will sleep for and calls Sleep(int n)
             std::string str2 = input.substr(1,input.length());
             printTime();
             int sleep_count = stoi(str2);
@@ -50,9 +51,11 @@ void getLine(char *argv[], char filename[]){
             std::cout << "Sleep ";
             std::cout << sleep_count;
             std::cout << dummy << '\n';
+            Sleep(sleep_count);
+            
         }else{
-            //printTime();
-            //std::cout << input << std::endl;
+            //add transcation count and call the client to send
+            //message to server and receive from server
             transactions++;
             clientFun(inputC, argv, filename);
         }
@@ -72,52 +75,21 @@ int main(int argc, char *argv[]){
         printf("\n Usage: %s <portnumber> <ip of server> \n",argv[0]);
         return 1;
     }
-    
-    int pid = getppid();
+    //set file name as machinename.pid
+    int pid = getpid();
     gethostname(hostbuffer, sizeof(hostbuffer));
-//    std::cout << "PID: " << pid << std::endl;
     sprintf(filename, "%s.%d", hostbuffer, pid);
-//    std::cout << "Filename " << filename << std::endl;
+    //replace stdout with filename
+    freopen(filename, "w", stdout);
+    //change the portnumber specified to int
     portnumber = atoi(argv[1]);
-//    std::cout << portnumber << std::endl;
-//    std::cout << argv[2] << std::endl;
-    //freopen(filename,"w",stdout);
-    
-    printHeader(argv[2], hostbuffer);
+    //print the header for output
+    printHeader(argv[2], filename);
+    //read line and execute the command
     getLine(argv, filename);
-//    std::string input;
-//    //bool cFlag = true;
-//    while(true){
-//        //memset(input, '0', sizeof(input));
-//        if (std::cin.eof()){
-//            break;
-//        }
-//        std::cin >> input;
-//        int size_input = (int) input.length();
-//        char inputC[size_input-1];
-//        for (int i = 0; i < size_input; i++){
-//            inputC[i] = input[i+1];
-//        }
-//
-//
-//        if (input[0] == 'S'){
-//            std::string str2 = input.substr(1,input.length());
-//            printTime();
-//            int sleep_count = stoi(str2);
-//            std::string dummy = " units";
-//            std::cout << "Sleep ";
-//            std::cout << sleep_count;
-//            std::cout << dummy << '\n';
-//        }else{
-//            //printTime();
-//            //std::cout << input << std::endl;
-//            transactions++;
-//            clientFun(inputC, argv, filename);
-//        }
-//    }
-    
+    //print summary
     printFooter(transactions);
-   // fclose(stdout);
-    
+    //replace STDOUT stream
+    fclose(stdout);
     return 0;
 }

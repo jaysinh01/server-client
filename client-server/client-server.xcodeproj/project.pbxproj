@@ -32,6 +32,8 @@
 		6988375A242289B9002EC250 /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
 		6988375B242289B9002EC250 /* TandS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TandS.cpp; sourceTree = "<group>"; };
 		6988375E24228A10002EC250 /* client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
+		6988376124240838002EC250 /* server.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = server.1; sourceTree = "<group>"; };
+		6988376224240A9E002EC250 /* client.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = client.1; sourceTree = "<group>"; };
 		69EB2555241E84690001D70F /* client-server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "client-server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		69EB2558241E84690001D70F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		69EB2563241F36C80001D70F /* client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = client.cpp; sourceTree = "<group>"; };
@@ -79,6 +81,8 @@
 				69EB2567242134FB0001D70F /* clientManager.cpp */,
 				69EB2568242134FB0001D70F /* clientManager.hpp */,
 				6988375E24228A10002EC250 /* client.h */,
+				6988376124240838002EC250 /* server.1 */,
+				6988376224240A9E002EC250 /* client.1 */,
 			);
 			path = "client-server";
 			sourceTree = "<group>";
